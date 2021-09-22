@@ -25,15 +25,7 @@ app.get("/api/notes", (req, res) =>
 );
 //
 //
-app.post("/api/notes", (req, res) => init(req));
-//
-//
-app.listen(PORT, () => {
-  console.log(`http://localhost:${PORT}`);
-});
-//
-//
-async function init(req) {
+app.post("/api/notes", async (req, res) => {
   const dataToRead = await fs.readFile("./db/db.json", "utf8");
 
   const parsedData = JSON.parse(dataToRead);
@@ -43,4 +35,12 @@ async function init(req) {
   const stringifiedData = JSON.stringify(parsedData);
 
   await fs.writeFile("./db/db.json", stringifiedData);
-}
+  res.send("whatever");
+});
+//
+//
+app.listen(PORT, () => {
+  console.log(`http://localhost:${PORT}`);
+});
+//
+// const {title, text} = req.body
