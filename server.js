@@ -30,9 +30,27 @@ app.post("/api/notes", async (req, res) => {
 
   const parsedData = JSON.parse(dataToRead);
 
-  parsedData.push(req.body);
+  parsedData.push({
+    ...req.body,
+    id: Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .toString(1),
+  });
 
   const stringifiedData = JSON.stringify(parsedData);
+
+  await fs.writeFile("./db/db.json", stringifiedData);
+  res.send("whatever");
+});
+
+app.delete("/api/notes/:id", async (req, res) => {
+  const dataToRead = await fs.readFile("./db/db.json", "utf8");
+
+  const parsedData = JSON.parse(dataToRead);
+
+  const notes = parsedData.filter((note) => note.id !== req.params.id);
+
+  const stringifiedData = JSON.stringify(notes);
 
   await fs.writeFile("./db/db.json", stringifiedData);
   res.send("whatever");
